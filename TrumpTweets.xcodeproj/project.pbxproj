@@ -41,7 +41,6 @@
 			isa = PBXGroup;
 			children = (
 				0222E4052135852D00B3AAE6 /* TrumpTweets */,
-				0222E4042135852D00B3AAE6 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -51,6 +50,7 @@
 				0222E4032135852D00B3AAE6 /* TrumpTweets.app */,
 			);
 			name = Products;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		0222E4052135852D00B3AAE6 /* TrumpTweets */ = {
@@ -63,6 +63,7 @@
 				0222E40D2135852E00B3AAE6 /* Assets.xcassets */,
 				0222E40F2135852E00B3AAE6 /* LaunchScreen.storyboard */,
 				0222E4122135852E00B3AAE6 /* Info.plist */,
+				0222E4042135852D00B3AAE6 /* Products */,
 			);
 			path = TrumpTweets;
 			sourceTree = "<group>";
