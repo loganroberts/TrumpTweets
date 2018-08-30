@@ -102,7 +102,7 @@ class GameViewController: UIViewController {
     
     var Adverb: Set = ["gone"]
     
-    var tweets: Set = ["This is a book.", "How many sisters do you have?", "There is not any book on the table.", "Did you miss the bus?", "My mouth is watering.", "I suppose you dance too much"]
+    var tweets: Set = ["This is a book.", "How many sisters do you have?", "There is not any book on the table.", "Did you miss the bus?", "My mouth is really wet.", "I suppose you dance too much"]
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //NLP Logic
