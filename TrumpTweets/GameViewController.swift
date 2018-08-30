@@ -8,8 +8,9 @@
 
 import Foundation
 import UIKit
-import SceneKit
+import SpriteKit
 import Social
+import NaturalLanguage
 
 
 //custom extensions
@@ -26,8 +27,6 @@ extension Int: Sequence {
         return (0..<self).makeIterator()
     }
 }
-
-
 
 extension String {
     func stringByReplacingFirstOccurrenceOfString(
@@ -53,17 +52,27 @@ class GameViewController: UIViewController {
     
     @objc func updatePlayTimer() {
         playSeconds += 1
-
+        if playSeconds == 0 {
+            feedbackLabel.text = "ready."
+        }
+        if playSeconds == 1 {
+            feedbackLabel.text = "ready.."
+        }
+        if playSeconds == 2 {
+            feedbackLabel.text = "ready..."
+        }
         if playSeconds == 3 {
             playTimer.invalidate()
-            parseTweet()
             showGameplayScreen()
+            setupTweetForPlay()
         }
     }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        SentenceView.presentScene(sentenceScene)
+        sentenceScene.backgroundColor = .white
         runPlayTimer()
     }
     
@@ -88,8 +97,8 @@ class GameViewController: UIViewController {
     @IBOutlet weak var word4Button: UIButton!
     @IBOutlet weak var word5Button: UIButton!
     
-    @IBOutlet weak var SentenceView: UIView!
-    @IBOutlet weak var sentenceLabel: UILabel!
+    @IBOutlet weak var SentenceView: SKView!
+    
     
     //Sources
     var Verb: Set = ["ask", "be", "become", "begin", "call", "can", "come", "could", "do", "feel", "find", "get", "give", "go", "have", "hear", "help", "keep", "know", "leave", "let", "like", "live", "look", "make", "may", "mean", "might", "move", "need", "play", "put", "run", "say", "see", "seem", "should", "show", "start", "take", "talk", "tell", "think", "try", "turn", "use", "want", "will", "work", "would"]
@@ -104,170 +113,90 @@ class GameViewController: UIViewController {
     
     var tweets: Set = ["This is a book.", "How many sisters do you have?", "There is not any book on the table.", "Did you miss the bus?", "My mouth is really wet.", "I suppose you dance too much"]
     
+    var lexicalOptions: Set = ["Verb", "Noun", "Adjective"]
+    
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //NLP Logic
-
+        class LexicalType {
+        var text: String
+        var lexicalType: String
+        
+        init(text: String, lexicalType: String) {
+            self.text = text
+            self.lexicalType = lexicalType
+        }
+    }
    
-    var lexicalOptions: Set = ["Verb", "Noun", "Adjective", "Adverb", "Article"]
-    var lexicalTypeToRemove = "Verb"
-    var lexicalTypesRemoved: Set = [""]
-    var baseTweet = " "
-    var baseTweetArray: Array = [""]
-    var workingTweet: Array = [""]
-    var wordsRemoved = 0
-    var removedWordsCount = 0
+    var parts: [String] = []
+    var wordsTaggedWithLexicalType: [LexicalType] = []
     
-    func parseTweet() {
-        let text = tweets.randomObject()!
-        baseTweetArray = text.components(separatedBy: " ")
-        getSentenceLength()
-    }
-    
-    func getSentenceLength() {
-        if baseTweetArray.count < 10 {
-            removeLexicalType()
-            if removedWordsCount == 0 {
-                removeLexicalTypeAgain()
-            }
-            setSentenceLabel()
-        } else if (baseTweetArray.count > 10) && (baseTweetArray.count < 15) {
-            removeLexicalType()
-            removeLexicalTypeAgain()
-            if removedWordsCount == 0 {
-                removeLexicalTypeAgain()
-            }
-            setSentenceLabel()
-            print("Between 10 and 15 words")
-        } else if (baseTweetArray.count > 15) && (baseTweetArray.count < 25) {
-            removeLexicalType()
-            removeLexicalTypeAgain()
-            if removedWordsCount == 0 {
-                removeLexicalTypeAgain()
-            }
-            setSentenceLabel()
-            print("Between 15 and 25 words")
-        } else if baseTweetArray.count > 25 {
-                print("Over 25 words")
-                //parseTweet()
-        }
-    }
-    
-    func setSentenceLabel() {
-        let tweetToPrint = workingTweet.joined(separator: " ")
-        print(tweetToPrint)
-        sentenceLabel.text = tweetToPrint
-        setupAllButtons()
-    }
-    
-    func removeLexicalType() {
-        lexicalTypeToRemove = lexicalOptions.randomObject()!
-        removedWordsCount = 0
-        print(lexicalTypeToRemove)
-        for member in baseTweetArray {
-            let memberIndex = baseTweetArray.index(of: member)
-            let tagger = NSLinguisticTagger(tagSchemes: [.lexicalClass], options: 0)
-            let options: NSLinguisticTagger.Options = [.omitPunctuation, .omitWhitespace]
-            let range = NSRange(location: 0, length: member.utf16.count)
-            tagger.string = member
-            tagger.setOrthography(NSOrthography.defaultOrthography(forLanguage: "en-US"), range: range)
-            tagger.enumerateTags(in: range, unit: .word, scheme: .lexicalClass, options: options) { tag, tokenRange, stop in
-                let word = (member as NSString).substring(with: tokenRange)
-                print("\(tag!.rawValue):\(word)")
-                if tag!.rawValue == lexicalTypeToRemove {
-                    workingTweet.insert(" \(lexicalTypeToRemove)", at: memberIndex!)
-                    removedWordsCount += 1
-                } else {
-                    workingTweet.insert(" \(word)", at: memberIndex!)
-                }
-                if !lexicalTypesRemoved.contains(tag!.rawValue) {
-                    lexicalTypesRemoved.insert(tag!.rawValue)
-                }
-            }
-        }
-    }
-    
-    
-    func removeLexicalTypeAgain() {
-        removedWordsCount = 0
-        lexicalTypeToRemove = lexicalOptions.randomObject()!
-        print(lexicalTypeToRemove)
-        for member in workingTweet {
-            let memberIndex = workingTweet.index(of: member)
-            let tagger = NSLinguisticTagger(tagSchemes: [.lexicalClass], options: 0)
-            let options: NSLinguisticTagger.Options = [.omitPunctuation, .omitWhitespace]
-            let range = NSRange(location: 0, length: member.utf16.count)
-            tagger.string = member
-            tagger.setOrthography(NSOrthography.defaultOrthography(forLanguage: "en-US"), range: range)
-            tagger.enumerateTags(in: range, unit: .word, scheme: .lexicalClass, options: options) { tag, tokenRange, stop in
-                let word = (member as NSString).substring(with: tokenRange)
-                if tag!.rawValue == lexicalTypeToRemove {
-                    workingTweet[memberIndex!] = lexicalTypeToRemove
-                    print(word)
-                    if !lexicalTypesRemoved.contains(tag!.rawValue) {
-                        lexicalTypesRemoved.insert(tag!.rawValue)
-                    }
-                }
-            }
-        }
-    }
-    
-    //setup buttons with words
-    
-    func populateButton(forButton: UIButton) {
-        var buttonWord = " "
-        if lexicalTypesRemoved.count > 0 {
-            let buttonWordType = lexicalTypesRemoved.first
+    func createBaseTweet() {
+        let input = tweets.randomObject()
+        let tagger = NLTagger(tagSchemes: [.lexicalClass])
+        let options: NLTagger.Options = [.omitOther, .omitPunctuation, .omitWhitespace]
+        tagger.string = input
         
-        lexicalTypesRemoved.removeFirst()
-        
-        if buttonWordType == "Verb" {
-            buttonWord = Verb.randomObject()!
-        } else if buttonWordType == "Noun" {
-            buttonWord = Noun.randomObject()!
-        } else if buttonWordType == "Adjective" {
-            buttonWord = Adjective.randomObject()!
-        } else if buttonWordType == "Adverb" {
-            buttonWord = Adverb.randomObject()!
-        } else if buttonWordType == "Article" {
-            buttonWord = Article.randomObject()!
-        } else {
-            let buttonFillerType = lexicalOptions.randomObject()
-
-            if buttonFillerType == "Verb" {
-                buttonWord = Verb.randomObject()!
-            } else if buttonFillerType == "Noun" {
-                buttonWord = Noun.randomObject()!
-            } else if buttonFillerType == "Adjective" {
-                buttonWord = Adjective.randomObject()!
-            } else if buttonFillerType == "Adverb" {
-                buttonWord = Adverb.randomObject()!
-            } else if buttonFillerType == "Article" {
-                buttonWord = Article.randomObject()!
+        tagger.enumerateTags(
+            in: input!.startIndex..<input!.endIndex, unit: .word, scheme: .lexicalClass, options: options) {
+            (tag, tokenRange) in
+                if let tag = tag {
+                let part = String(input![tokenRange])
+                parts.append(part)
+                wordsTaggedWithLexicalType.append(LexicalType(text: part, lexicalType: tag.rawValue))
+                }
+                return true
+        }
+    }
+    
+    func filterForRemovedWords() {
+        let typeToRemove = lexicalOptions.randomObject()
+        for member in wordsTaggedWithLexicalType {
+            if (member.lexicalType == typeToRemove!) && (member.text != "WORDREMOVED") {
+                print(member.text)
+                member.text = "WORDREMOVED"
             }
         }
-        forButton.setTitle(buttonWord, for: UIControl.State.normal)
-        print(buttonWord)
+    }
+    
+    lazy var sentenceScene = SKScene(size: (SentenceView.bounds.size))
+    
+    func setupSentenceLabel(withText: String) -> SKSpriteNode {
+    
+        let sentenceLabel = SKLabelNode(text: withText)
+        
+        let sentenceWordNodeSize = CGSize(width: (sentenceLabel.frame.width), height: (sentenceLabel.frame.height + 20))
+        let sentenceWordNode = SKSpriteNode(color: .black, size: sentenceWordNodeSize)
+        
+        sentenceWordNode.anchorPoint = CGPoint(x: 0, y: 0)
+        sentenceWordNode.position = CGPoint(x: 60, y: (110))
+       
+        sentenceLabel.fontSize = 25
+        sentenceLabel.fontColor = .white
+        sentenceLabel.fontName = "Helvetica-Bold"
+        sentenceLabel.position = CGPoint(x: (sentenceWordNodeSize.width / 2), y: (sentenceWordNodeSize.height / 4))
+        sentenceWordNode.addChild(sentenceLabel)
+        
+        return sentenceWordNode
+    }
+    
+    
+    func createSentenceLabel() {
+        var previousPositionValue: CGFloat = 0
+        for member in wordsTaggedWithLexicalType {
+            let sentenceLabelNode = setupSentenceLabel(withText: member.text)
+            sentenceScene.addChild(sentenceLabelNode)
+            sentenceLabelNode.position.x = previousPositionValue
+            previousPositionValue += (sentenceLabelNode.frame.width + 10)
         }
-    
-    }
-    func setupAllButtons() {
-        populateButton(forButton: word1Button)
-        populateButton(forButton: word2Button)
-        populateButton(forButton: word3Button)
-        populateButton(forButton: word4Button)
-        populateButton(forButton: word5Button)
+        previousPositionValue = 0
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    func setupTweetForPlay() {
+        createBaseTweet()
+        filterForRemovedWords()
+        createSentenceLabel()
+    }
 //game timer setup
     
     var seconds = 30 //starting time options
@@ -284,8 +213,6 @@ class GameViewController: UIViewController {
             playTimer.invalidate()
         }
     }
-
-    
     
     @IBAction func returnToMenu(_ sender: Any) {
     playTimer.invalidate()

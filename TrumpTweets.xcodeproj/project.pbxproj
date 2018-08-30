@@ -24,6 +24,7 @@
 		0222E4102135852E00B3AAE6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0222E4122135852E00B3AAE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0222E41C213587B500B3AAE6 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		0299907621382E16002E273D /* Playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 				0222E40D2135852E00B3AAE6 /* Assets.xcassets */,
 				0222E40F2135852E00B3AAE6 /* LaunchScreen.storyboard */,
 				0222E4122135852E00B3AAE6 /* Info.plist */,
+				0299907621382E16002E273D /* Playground.playground */,
 				0222E4042135852D00B3AAE6 /* Products */,
 			);
 			path = TrumpTweets;

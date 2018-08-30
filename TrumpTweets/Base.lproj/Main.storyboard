@@ -189,25 +189,16 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ready...." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iPD-rl-tZf">
-                                <rect key="frame" x="116" y="310" width="142" height="46"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ready" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iPD-rl-tZf">
+                                <rect key="frame" x="54" y="310" width="267" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="40"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VVd-sq-8YF">
-                                <rect key="frame" x="0.0" y="80" width="375" height="215"/>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VVd-sq-8YF" customClass="SKView">
+                                <rect key="frame" x="0.0" y="80" width="1000" height="215"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sentence" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="none" minimumFontSize="25" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eKD-ta-GbY">
-                                        <rect key="frame" x="13" y="13" width="349" height="189"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="35"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -221,7 +212,6 @@
                         <outlet property="feedbackLabel" destination="iPD-rl-tZf" id="oPf-kO-Y04"/>
                         <outlet property="livesLabel" destination="nBA-pz-rfY" id="zxs-zY-GbC"/>
                         <outlet property="scoreLabel" destination="Vme-OA-08M" id="AFr-Sx-GfE"/>
-                        <outlet property="sentenceLabel" destination="eKD-ta-GbY" id="HSM-B4-HZF"/>
                         <outlet property="word1Button" destination="xJ1-D4-c4e" id="8tB-8P-oNy"/>
                         <outlet property="word2Button" destination="rAq-Vh-AoR" id="N9G-c5-elc"/>
                         <outlet property="word3Button" destination="Kbi-dW-UnR" id="CcB-S5-YnE"/>
