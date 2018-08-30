@@ -152,7 +152,6 @@ class GameViewController: UIViewController {
         let typeToRemove = lexicalOptions.randomObject()
         for member in wordsTaggedWithLexicalType {
             if (member.lexicalType == typeToRemove!) && (member.text != "WORDREMOVED") {
-                print(member.text)
                 member.text = "WORDREMOVED"
             }
         }
@@ -181,14 +180,23 @@ class GameViewController: UIViewController {
     
     
     func createSentenceLabel() {
-        var previousPositionValue: CGFloat = 0
+        var previousXValue: CGFloat = 40
+        var previousYValue: CGFloat = 110
+        
         for member in wordsTaggedWithLexicalType {
             let sentenceLabelNode = setupSentenceLabel(withText: member.text)
             sentenceScene.addChild(sentenceLabelNode)
-            sentenceLabelNode.position.x = previousPositionValue
-            previousPositionValue += (sentenceLabelNode.frame.width + 10)
+            sentenceLabelNode.position.x = previousXValue
+            sentenceLabelNode.position.y = previousYValue
+            previousXValue += (sentenceLabelNode.frame.width + 10)
+            if (sentenceLabelNode.position.x + sentenceLabelNode.frame.width) > 355 {
+                previousYValue -= 60
+                sentenceLabelNode.position.y = previousYValue
+                sentenceLabelNode.position.x = 60
+                previousXValue = 40
+            }
+            print(member.text)
         }
-        previousPositionValue = 0
     }
     
     
