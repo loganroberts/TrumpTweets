@@ -55,6 +55,7 @@ extension UIButton {
         //let textWidth = (title as NSString).size(withAttributes:[NSAttributedString.Key.font:self.titleLabel!.font!]).width
         //let width: CGFloat = textWidth + 20
         //self.frame.size.width = width
+        
     }
 }
 
@@ -99,7 +100,7 @@ class GameViewController: UIViewController {
         GameInfoView.isHidden = false
         InteractionView.isHidden = false
         SentenceView.isHidden = false
-        
+    
     }
     
     //Interface setup
@@ -170,8 +171,8 @@ class GameViewController: UIViewController {
     func filterForRemovedWords() {
         for option in lexicalOptions {
             for member in wordsTaggedWithLexicalType {
-                if (member.lexicalType == option) && (member.text != "______") {
-                    member.text = "______"
+                if (member.lexicalType == option) && (member.text != option) {
+                    member.text = option
                 }
             }
         }
@@ -191,6 +192,7 @@ class GameViewController: UIViewController {
         sentenceLabel.fontSize = 25
         sentenceLabel.fontColor = .white
         sentenceLabel.fontName = "Helvetica-Bold"
+        sentenceLabel.name = "sentenceLabel"
         sentenceLabel.position = CGPoint(x: (sentenceWordNodeSize.width / 2), y: (sentenceWordNodeSize.height / 4))
         sentenceWordNode.addChild(sentenceLabel)
         
@@ -201,6 +203,8 @@ class GameViewController: UIViewController {
     var createSentenceLabelRunCount = 0
     var nextWordLengthToIncrement: CGFloat = 0
     
+    var currentWordToReplace = ""
+    
     func createSentenceLabel() {
         
         if sentenceWordIndex == wordsTaggedWithLexicalType.endIndex {
@@ -208,12 +212,12 @@ class GameViewController: UIViewController {
             filterForRemovedWords()
         }
         
-        let word = wordsTaggedWithLexicalType[sentenceWordIndex]
+            let word = wordsTaggedWithLexicalType[sentenceWordIndex]
             let sentenceLabelNode = setupSentenceLabel(withText: word.text, andType: word.lexicalType)
             sentenceScene.addChild(sentenceLabelNode)
             populateButtons(withType: word.lexicalType)
             sentenceWordIndex += 1
-            
+            currentWordToReplace = word.text
        
         if createSentenceLabelRunCount > 0 {
             for children in sentenceScene.children {
@@ -227,6 +231,7 @@ class GameViewController: UIViewController {
         }
         createSentenceLabelRunCount += 1
         nextWordLengthToIncrement = sentenceLabelNode.frame.width + 10
+        
     }
     
     
@@ -234,13 +239,16 @@ class GameViewController: UIViewController {
         createBaseTweet()
         filterForRemovedWords()
         createSentenceLabel()
+        runMainTimer()
     }
+    
     
     func populateButtons(withType: String) {
         
         func setWrongAnswer() -> UIButton {
             let wrongAnswer = getWrongAnswer(thatIsNot: withType)
             let randomWrongButton = wordButtonsCollection.randomObject()
+            randomWrongButtonName = randomWrongButton!.tag
             
             switch wrongAnswer {
             case "Verb":
@@ -267,17 +275,21 @@ class GameViewController: UIViewController {
             let verb = Verb.randomObject()
             wordIsNotBlank = false
             button.updateButtonTitle(title: verb!)
+            button.isUserInteractionEnabled = true
         case "Noun":
             let noun = Noun.randomObject()
             wordIsNotBlank = false
             button.updateButtonTitle(title: noun!)
+            button.isUserInteractionEnabled = true
         case "Adjective":
             let adjective = Adjective.randomObject()
             wordIsNotBlank = false
             button.updateButtonTitle(title: adjective!)
+            button.isUserInteractionEnabled = true
         default:
             wordIsNotBlank = true
             button.updateButtonTitle(title: " ")
+            button.isUserInteractionEnabled = false
         }
     }
         if wordIsNotBlank == false {
@@ -296,8 +308,20 @@ class GameViewController: UIViewController {
     
     
   //game scoring logic
+    var randomWrongButtonName = 0
     
-    
+    func setChosenWord(pressedButton: UIButton) {
+        if randomWrongButtonName == pressedButton.tag {
+            print("Wrong Button Pressed")
+        } else {
+            for child in sentenceScene.children {
+                if child.position.x == 280 {
+                    var labelNode: SKLabelNode = child.childNode(withName: "sentenceLabel") as! SKLabelNode
+                    labelNode.text = pressedButton.titleLabel?.text
+                }
+            }
+        }
+    }
     
     
     
@@ -309,29 +333,58 @@ class GameViewController: UIViewController {
     
     func runMainTimer() {
         mainTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(GameViewController.updateMainTimer)), userInfo: nil, repeats: true)
+        
     }
     
     @objc func updateMainTimer() {
         seconds -= 1
         if seconds == 0 {
         mainTimer.invalidate()
+            createSentenceLabel()
+            seconds = 3
+            runMainTimer()
         }
+    }
+    
+    func endGame() {
+        playTimer.invalidate()
+        mainTimer.invalidate()
+        sentenceScene.removeAllChildren()
+        feedbackLabel.isHidden = false
+        GameInfoView.isHidden = true
+        InteractionView.isHidden = true
+        SentenceView.isHidden = true
+        randomWrongButtonName = 0
     }
     
     
     @IBAction func returnToMenu(_ sender: Any) {
-    playTimer.invalidate()
-    mainTimer.invalidate()
-    sentenceScene.removeAllChildren()
-    feedbackLabel.isHidden = false
-    GameInfoView.isHidden = true
-    InteractionView.isHidden = true
-    SentenceView.isHidden = true
+        endGame()
     }
     
     @IBAction func word1Pressed(_ sender: Any) {
-        createSentenceLabel()
+        setChosenWord(pressedButton: word1Button)
     }
+    
+    @IBAction func word2Pressed(_ sender: Any) {
+        setChosenWord(pressedButton: word2Button)
+    }
+    
+    @IBAction func word3Pressed(_ sender: Any) {
+        setChosenWord(pressedButton: word3Button)
+    }
+    
+    @IBAction func word4Pressed(_ sender: Any) {
+        setChosenWord(pressedButton: word4Button)
+    }
+    
+    @IBAction func word5Pressed(_ sender: Any) {
+        setChosenWord(pressedButton: word5Button)
+    }
+    
+    
+    
+    
     
 }
 
