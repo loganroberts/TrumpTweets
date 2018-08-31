@@ -227,6 +227,9 @@ class GameViewController: UIViewController {
                     children.position.x -= nextWordLengthToIncrement
                     if children.position.x < 5 {
                         children.removeFromParent()
+                    } else if children.position.x < 280 {
+                        let tweetText: SKLabelNode = children.childNode(withName: "sentenceLabel") as! SKLabelNode
+                        tweetToTrumpString.append("\(tweetText.text!) ")
                     }
                 }
             }
@@ -268,6 +271,7 @@ class GameViewController: UIViewController {
             
             return randomWrongButton!
         }
+        
         var wordIsNotBlank = true
         
         for button in wordButtonsCollection {
@@ -350,16 +354,37 @@ class GameViewController: UIViewController {
         
     }
     
+    var didAnswerInTime = false
+    
     @objc func updateMainTimer() {
         seconds -= 1
+        if lives == 0 {
+            playAgain()
+        }
         if seconds == 0 {
             mainTimer.invalidate()
+            checkIfAnswered()
             createSentenceLabel()
             seconds = 3
             runMainTimer()
+            didAnswerInTime = true
         }
+        
     }
     
+    func checkIfAnswered() {
+        for child in sentenceScene.children {
+            let labelNode: SKLabelNode = child.childNode(withName: "sentenceLabel") as! SKLabelNode
+            if (child.position.x == 280) && (lexicalOptions.contains(labelNode.text!)) {
+                lives -= 1
+                livesLabel.text = "\(lives) :L"
+                didAnswerInTime = false
+                //put something here to handle how non=answered words that dont kill you are handled
+            } else {
+                didAnswerInTime = true
+            }
+        }
+    }
     
     func endGame() {
         playTimer.invalidate()
@@ -370,6 +395,7 @@ class GameViewController: UIViewController {
         InteractionView.isHidden = true
         SentenceView.isHidden = true
         randomWrongButtonName = 0
+        scoreLabel.text = "\(0)"
     }
     
     func playAgain() {
@@ -378,7 +404,6 @@ class GameViewController: UIViewController {
         GameInfoView.isHidden = false
         menuButton.isHidden = false
         menuButton.titleLabel?.text = "Back"
-        
         print(tweetToTrumpString)
     }
     
