@@ -196,6 +196,7 @@ class GameViewController: UIViewController {
         sentenceLabel.fontName = "Helvetica-Bold"
         sentenceLabel.name = "sentenceLabel"
         sentenceLabel.position = CGPoint(x: (sentenceWordNodeSize.width / 2), y: (sentenceWordNodeSize.height / 4))
+        sentenceWordNode.name = "sentenceWordNode"
         sentenceWordNode.addChild(sentenceLabel)
         
         return sentenceWordNode
@@ -227,9 +228,6 @@ class GameViewController: UIViewController {
                     children.position.x -= nextWordLengthToIncrement
                     if children.position.x < 5 {
                         children.removeFromParent()
-                    } else if children.position.x < 280 {
-                        let tweetText: SKLabelNode = children.childNode(withName: "sentenceLabel") as! SKLabelNode
-                        tweetToTrumpString.append("\(tweetText.text!) ")
                     }
                 }
             }
