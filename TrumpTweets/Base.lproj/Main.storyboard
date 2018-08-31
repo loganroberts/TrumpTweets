@@ -143,7 +143,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="40"/>
-                                        <state key="normal" title="word1">
+                                        <state key="normal">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -155,7 +155,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="40"/>
-                                        <state key="normal" title="word3">
+                                        <state key="normal">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
@@ -164,7 +164,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="40"/>
-                                        <state key="normal" title="word5">
+                                        <state key="normal">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
@@ -173,7 +173,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="40"/>
-                                        <state key="normal" title="word2">
+                                        <state key="normal">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
@@ -182,7 +182,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="40"/>
-                                        <state key="normal" title="word4">
+                                        <state key="normal">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
@@ -217,6 +217,11 @@
                         <outlet property="word3Button" destination="Kbi-dW-UnR" id="CcB-S5-YnE"/>
                         <outlet property="word4Button" destination="onb-OV-bnC" id="eyY-bL-MJd"/>
                         <outlet property="word5Button" destination="TVf-YQ-oNH" id="9Yn-0A-blL"/>
+                        <outletCollection property="wordButtonsCollection" destination="xJ1-D4-c4e" collectionClass="NSMutableArray" id="SKc-DX-LMc"/>
+                        <outletCollection property="wordButtonsCollection" destination="rAq-Vh-AoR" collectionClass="NSMutableArray" id="KeR-jO-Okg"/>
+                        <outletCollection property="wordButtonsCollection" destination="Kbi-dW-UnR" collectionClass="NSMutableArray" id="J9k-cG-qzz"/>
+                        <outletCollection property="wordButtonsCollection" destination="onb-OV-bnC" collectionClass="NSMutableArray" id="i7T-ud-VrL"/>
+                        <outletCollection property="wordButtonsCollection" destination="TVf-YQ-oNH" collectionClass="NSMutableArray" id="HKs-j0-FSP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W1i-Ts-efc" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -22,6 +22,14 @@ extension Set {
     }
 }
 
+extension Array {
+    public func randomObject() -> Element? {
+        let n = Int(arc4random_uniform(UInt32(self.count)))
+        let index = self.index(self.startIndex, offsetBy: n)
+        return self.count > 0 ? self[index] : nil
+    }
+}
+
 extension Int: Sequence {
     public func makeIterator() -> CountableRange<Int>.Iterator {
         return (0..<self).makeIterator()
@@ -39,6 +47,16 @@ extension String {
     }
 }
 
+extension UIButton {
+    func updateButtonTitle(title:String){
+        self.backgroundColor = .black
+        self.setTitle(title, for: .normal)
+        self.setTitleColor(UIColor.white, for: .normal)
+        //let textWidth = (title as NSString).size(withAttributes:[NSAttributedString.Key.font:self.titleLabel!.font!]).width
+        //let width: CGFloat = textWidth + 20
+        //self.frame.size.width = width
+    }
+}
 
 class GameViewController: UIViewController {
     
@@ -96,6 +114,7 @@ class GameViewController: UIViewController {
     @IBOutlet weak var word3Button: UIButton!
     @IBOutlet weak var word4Button: UIButton!
     @IBOutlet weak var word5Button: UIButton!
+    @IBOutlet var wordButtonsCollection: [UIButton]!
     
     @IBOutlet weak var SentenceView: SKView!
     
@@ -168,7 +187,7 @@ class GameViewController: UIViewController {
         let sentenceWordNode = SKSpriteNode(color: .black, size: sentenceWordNodeSize)
         
         sentenceWordNode.anchorPoint = CGPoint(x: 0, y: 0)
-        sentenceWordNode.position = CGPoint(x: 256, y: (sentenceScene.frame.height / 2))
+        sentenceWordNode.position = CGPoint(x: 280, y: (sentenceScene.frame.height / 2))
         sentenceLabel.fontSize = 25
         sentenceLabel.fontColor = .white
         sentenceLabel.fontName = "Helvetica-Bold"
@@ -192,6 +211,7 @@ class GameViewController: UIViewController {
         let word = wordsTaggedWithLexicalType[sentenceWordIndex]
             let sentenceLabelNode = setupSentenceLabel(withText: word.text, andType: word.lexicalType)
             sentenceScene.addChild(sentenceLabelNode)
+            populateButtons(withType: word.lexicalType)
             sentenceWordIndex += 1
             
        
@@ -209,10 +229,6 @@ class GameViewController: UIViewController {
         nextWordLengthToIncrement = sentenceLabelNode.frame.width + 10
     }
     
-   
-    @IBAction func word1Pressed(_ sender: Any) {
-        createSentenceLabel()
-    }
     
     func setupTweetForPlay() {
         createBaseTweet()
@@ -220,8 +236,56 @@ class GameViewController: UIViewController {
         createSentenceLabel()
     }
     
-    func moveSentenceLabelNodesForward () {
+    func populateButtons(withType: String) {
         
+        func setWrongAnswer() -> UIButton {
+            let wrongAnswer = getWrongAnswer(thatIsNot: withType)
+            let randomWrongButton = wordButtonsCollection.randomObject()
+            
+            switch wrongAnswer {
+            case "Verb":
+                let verb = Verb.randomObject()
+                randomWrongButton?.updateButtonTitle(title: verb!)
+            case "Noun":
+                let noun = Noun.randomObject()
+                randomWrongButton?.updateButtonTitle(title: noun!)
+            case "Adjective":
+                let adjective = Adjective.randomObject()
+                randomWrongButton?.updateButtonTitle(title: adjective!)
+            default:
+                print("nothingWrong")
+                randomWrongButton?.updateButtonTitle(title: "nothing")
+            }
+            
+            return randomWrongButton!
+        }
+        
+        for button in wordButtonsCollection {
+        switch withType {
+        case "Verb":
+            let verb = Verb.randomObject()
+            button.updateButtonTitle(title: verb!)
+        case "Noun":
+            let noun = Noun.randomObject()
+            button.updateButtonTitle(title: noun!)
+        case "Adjective":
+            let adjective = Adjective.randomObject()
+            button.updateButtonTitle(title: adjective!)
+        default:
+            button.updateButtonTitle(title: " ")
+        }
+    }
+        let wrongButton = setWrongAnswer()
+        wrongButton.backgroundColor = .red
+}
+    
+    func getWrongAnswer(thatIsNot: String) -> String {
+        var wrongAnswer = lexicalOptions.randomObject()!
+        
+        while wrongAnswer == thatIsNot {
+            wrongAnswer = lexicalOptions.randomObject()!
+        }
+        return wrongAnswer
     }
     
     
@@ -251,6 +315,10 @@ class GameViewController: UIViewController {
     GameInfoView.isHidden = true
     InteractionView.isHidden = true
     SentenceView.isHidden = true
+    }
+    
+    @IBAction func word1Pressed(_ sender: Any) {
+        createSentenceLabel()
     }
     
 }
