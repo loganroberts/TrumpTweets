@@ -234,6 +234,10 @@ class GameViewController: UIViewController {
         }
         createSentenceLabelRunCount += 1
         nextWordLengthToIncrement = sentenceLabelNode.frame.width + 10
+        
+        if Thread.current.isMainThread {
+            print("Main Thread")
+        }
     }
     
     
