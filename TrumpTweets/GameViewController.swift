@@ -43,7 +43,7 @@ extension String {
 class GameViewController: UIViewController {
     
     var playSeconds = 0 //starting time options
-    var startTimer = Timer()
+    var playTimer = Timer()
     
     
     func runPlayTimer() {
@@ -149,17 +149,18 @@ class GameViewController: UIViewController {
     }
     
     func filterForRemovedWords() {
-        let typeToRemove = lexicalOptions.randomObject()
-        for member in wordsTaggedWithLexicalType {
-            if (member.lexicalType == typeToRemove!) && (member.text != "WORDREMOVED") {
-                member.text = "WORDREMOVED"
+        for option in lexicalOptions {
+            for member in wordsTaggedWithLexicalType {
+                if (member.lexicalType == option) && (member.text != "______") {
+                    member.text = "______"
+                }
             }
         }
     }
     
     lazy var sentenceScene = SKScene(size: (SentenceView.bounds.size))
     
-    func setupSentenceLabel(withText: String) -> SKSpriteNode {
+    func setupSentenceLabel(withText: String, andType: String) -> SKSpriteNode {
     
         let sentenceLabel = SKLabelNode(text: withText)
         
@@ -167,8 +168,7 @@ class GameViewController: UIViewController {
         let sentenceWordNode = SKSpriteNode(color: .black, size: sentenceWordNodeSize)
         
         sentenceWordNode.anchorPoint = CGPoint(x: 0, y: 0)
-        sentenceWordNode.position = CGPoint(x: 60, y: (110))
-       
+        sentenceWordNode.position = CGPoint(x: 256, y: (sentenceScene.frame.height / 2))
         sentenceLabel.fontSize = 25
         sentenceLabel.fontColor = .white
         sentenceLabel.fontName = "Helvetica-Bold"
@@ -178,52 +178,75 @@ class GameViewController: UIViewController {
         return sentenceWordNode
     }
     
+    lazy var sentenceWordIndex = wordsTaggedWithLexicalType.startIndex
+    var createSentenceLabelRunCount = 0
+    var nextWordLengthToIncrement: CGFloat = 0
     
     func createSentenceLabel() {
-        var previousXValue: CGFloat = 40
-        var previousYValue: CGFloat = 110
         
-        for member in wordsTaggedWithLexicalType {
-            let sentenceLabelNode = setupSentenceLabel(withText: member.text)
-            sentenceScene.addChild(sentenceLabelNode)
-            sentenceLabelNode.position.x = previousXValue
-            sentenceLabelNode.position.y = previousYValue
-            previousXValue += (sentenceLabelNode.frame.width + 10)
-            if (sentenceLabelNode.position.x + sentenceLabelNode.frame.width) > 355 {
-                previousYValue -= 60
-                sentenceLabelNode.position.y = previousYValue
-                sentenceLabelNode.position.x = 60
-                previousXValue = 40
-            }
-            print(member.text)
+        if sentenceWordIndex == wordsTaggedWithLexicalType.endIndex {
+            createBaseTweet()
+            filterForRemovedWords()
         }
+        
+        let word = wordsTaggedWithLexicalType[sentenceWordIndex]
+            let sentenceLabelNode = setupSentenceLabel(withText: word.text, andType: word.lexicalType)
+            sentenceScene.addChild(sentenceLabelNode)
+            sentenceWordIndex += 1
+            
+       
+        if createSentenceLabelRunCount > 0 {
+            for children in sentenceScene.children {
+                if children != sentenceLabelNode {
+                    children.position.x -= nextWordLengthToIncrement
+                    if children.position.x < 5 {
+                        children.removeFromParent()
+                    }
+                }
+            }
+        }
+        createSentenceLabelRunCount += 1
+        nextWordLengthToIncrement = sentenceLabelNode.frame.width + 10
     }
     
+   
+    @IBAction func word1Pressed(_ sender: Any) {
+        createSentenceLabel()
+    }
     
     func setupTweetForPlay() {
         createBaseTweet()
         filterForRemovedWords()
         createSentenceLabel()
     }
-//game timer setup
     
-    var seconds = 30 //starting time options
-    var playTimer = Timer()
-    var isTimerRunning = false //only one timer at a time
-    
-    func runTimer() {
-        playTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(GameViewController.updateTimer)), userInfo: nil, repeats: true)
+    func moveSentenceLabelNodesForward () {
+        
     }
     
-    @objc func updateTimer() {
+    
+//game timer setup
+    
+    var seconds = 3 //starting time options
+    var mainTimer = Timer()
+    var isTimerRunning = false //only one timer at a time
+    
+    func runMainTimer() {
+        mainTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(GameViewController.updateMainTimer)), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateMainTimer() {
         seconds -= 1
         if seconds == 0 {
-            playTimer.invalidate()
+        mainTimer.invalidate()
         }
     }
     
+    
     @IBAction func returnToMenu(_ sender: Any) {
     playTimer.invalidate()
+    mainTimer.invalidate()
+    sentenceScene.removeAllChildren()
     feedbackLabel.isHidden = false
     GameInfoView.isHidden = true
     InteractionView.isHidden = true
