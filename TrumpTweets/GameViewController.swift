@@ -48,7 +48,7 @@ extension String {
 }
 
 extension UIButton {
-    func updateButtonTitle(title:String){
+    func updateButtonTitle(title:String) {
         self.backgroundColor = .black
         self.setTitle(title, for: .normal)
         self.setTitleColor(UIColor.white, for: .normal)
@@ -259,24 +259,30 @@ class GameViewController: UIViewController {
             
             return randomWrongButton!
         }
+        var wordIsNotBlank = true
         
         for button in wordButtonsCollection {
         switch withType {
         case "Verb":
             let verb = Verb.randomObject()
+            wordIsNotBlank = false
             button.updateButtonTitle(title: verb!)
         case "Noun":
             let noun = Noun.randomObject()
+            wordIsNotBlank = false
             button.updateButtonTitle(title: noun!)
         case "Adjective":
             let adjective = Adjective.randomObject()
+            wordIsNotBlank = false
             button.updateButtonTitle(title: adjective!)
         default:
+            wordIsNotBlank = true
             button.updateButtonTitle(title: " ")
         }
     }
-        let wrongButton = setWrongAnswer()
-        wrongButton.backgroundColor = .red
+        if wordIsNotBlank == false {
+        _ = setWrongAnswer()
+        }
 }
     
     func getWrongAnswer(thatIsNot: String) -> String {
@@ -287,6 +293,12 @@ class GameViewController: UIViewController {
         }
         return wrongAnswer
     }
+    
+    
+  //game scoring logic
+    
+    
+    
     
     
 //game timer setup
