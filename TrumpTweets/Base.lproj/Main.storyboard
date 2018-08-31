@@ -106,14 +106,14 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vme-OA-08M">
-                                        <rect key="frame" x="8" y="12" width="83" height="42"/>
+                                        <rect key="frame" x="8" y="12" width="130" height="42"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="36"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nBA-pz-rfY">
-                                        <rect key="frame" x="314" y="12" width="53" height="42"/>
+                                        <rect key="frame" x="237" y="12" width="130" height="42"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="36"/>
                                         <nil key="textColor"/>
@@ -223,6 +223,7 @@
                         <outlet property="SentenceView" destination="VVd-sq-8YF" id="7v4-5n-vT7"/>
                         <outlet property="feedbackLabel" destination="iPD-rl-tZf" id="oPf-kO-Y04"/>
                         <outlet property="livesLabel" destination="nBA-pz-rfY" id="zxs-zY-GbC"/>
+                        <outlet property="menuButton" destination="Av5-7b-sRh" id="faS-20-Br2"/>
                         <outlet property="scoreLabel" destination="Vme-OA-08M" id="AFr-Sx-GfE"/>
                         <outlet property="word1Button" destination="xJ1-D4-c4e" id="8tB-8P-oNy"/>
                         <outlet property="word2Button" destination="rAq-Vh-AoR" id="N9G-c5-elc"/>

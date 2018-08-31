@@ -100,13 +100,15 @@ class GameViewController: UIViewController {
         GameInfoView.isHidden = false
         InteractionView.isHidden = false
         SentenceView.isHidden = false
-    
+        scoreLabel.text = "S: \(score)"
+        livesLabel.text = "\(lives) :L"
     }
     
     //Interface setup
     @IBOutlet weak var GameInfoView: UIView!
     @IBOutlet weak var livesLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var menuButton: UIButton!
     
     @IBOutlet weak var InteractionView: UIView!
     @IBOutlet weak var feedbackLabel: UILabel!
@@ -231,7 +233,6 @@ class GameViewController: UIViewController {
         }
         createSentenceLabelRunCount += 1
         nextWordLengthToIncrement = sentenceLabelNode.frame.width + 10
-        
     }
     
     
@@ -309,18 +310,30 @@ class GameViewController: UIViewController {
     
   //game scoring logic
     var randomWrongButtonName = 0
+    var score = 0
+    var lives = 3
+    
+    var tweetToTrumpString: String = ""
     
     func setChosenWord(pressedButton: UIButton) {
         if randomWrongButtonName == pressedButton.tag {
             print("Wrong Button Pressed")
+            if lives == 0 {
+            playAgain()
+            }
+            lives -= 1
         } else {
             for child in sentenceScene.children {
                 if child.position.x == 280 {
-                    var labelNode: SKLabelNode = child.childNode(withName: "sentenceLabel") as! SKLabelNode
+                    let labelNode: SKLabelNode = child.childNode(withName: "sentenceLabel") as! SKLabelNode
                     labelNode.text = pressedButton.titleLabel?.text
+                    score += (labelNode.text?.count)!
                 }
             }
         }
+        scoreLabel.text = "S: \(score)"
+        livesLabel.text = "\(lives) :L"
+        
     }
     
     
@@ -329,7 +342,8 @@ class GameViewController: UIViewController {
     
     var seconds = 3 //starting time options
     var mainTimer = Timer()
-    var isTimerRunning = false //only one timer at a time
+    
+    var buttonPressedInTime = false
     
     func runMainTimer() {
         mainTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: (#selector(GameViewController.updateMainTimer)), userInfo: nil, repeats: true)
@@ -339,12 +353,13 @@ class GameViewController: UIViewController {
     @objc func updateMainTimer() {
         seconds -= 1
         if seconds == 0 {
-        mainTimer.invalidate()
+            mainTimer.invalidate()
             createSentenceLabel()
             seconds = 3
             runMainTimer()
         }
     }
+    
     
     func endGame() {
         playTimer.invalidate()
@@ -357,6 +372,16 @@ class GameViewController: UIViewController {
         randomWrongButtonName = 0
     }
     
+    func playAgain() {
+        endGame()
+        feedbackLabel.text = "You Lost!"
+        GameInfoView.isHidden = false
+        menuButton.isHidden = false
+        menuButton.titleLabel?.text = "Back"
+        
+        print(tweetToTrumpString)
+    }
+    
     
     @IBAction func returnToMenu(_ sender: Any) {
         endGame()
@@ -364,28 +389,28 @@ class GameViewController: UIViewController {
     
     @IBAction func word1Pressed(_ sender: Any) {
         setChosenWord(pressedButton: word1Button)
+        
     }
     
     @IBAction func word2Pressed(_ sender: Any) {
         setChosenWord(pressedButton: word2Button)
+        
     }
     
     @IBAction func word3Pressed(_ sender: Any) {
         setChosenWord(pressedButton: word3Button)
+        
     }
     
     @IBAction func word4Pressed(_ sender: Any) {
         setChosenWord(pressedButton: word4Button)
+        
     }
     
     @IBAction func word5Pressed(_ sender: Any) {
         setChosenWord(pressedButton: word5Button)
+       
     }
-    
-    
-    
-    
-    
 }
 
 
